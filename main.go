@@ -188,20 +188,101 @@ func summaryData(data documentStudent) {
 	fmt.Println()
 }
 
-func searchSequential()  {
-	
+func searchSequential(data *documentStudent) {
+	var titleDocument string
+	fmt.Print("Fill title document to search: ")
+	fmt.Scan(&titleDocument)
+
+	found := false
+	for i := 0; i < data.totalDocument; i++ {
+		if titleDocument == data.dataDocument[i].researchTitle {
+			fmt.Println("Document found")
+			fmt.Println("Name", data.dataDocument[i].nameStudent)
+			fmt.Println("Topic", data.dataDocument[i].researchTopic)
+			fmt.Println("Title", data.dataDocument[i].researchTitle)
+			fmt.Println("Graduate Year", data.dataDocument[i].graduationYear)
+			fmt.Println("Mentor", data.dataDocument[i].mentor)
+			found = true
+			break
+		}
+	}
+	if !found {
+		fmt.Println("Document not found")
+	}
+	fmt.Println()
 }
 
-func searchBinary()  {
-	
+func searchBinary(data *documentStudent) {
+	var titleDocument string
+	fmt.Print("Fill title document to search: ")
+	fmt.Scan(&titleDocument)
+
+	low := 0
+	high := data.totalDocument - 1
+	found := false
+
+	for low <= high {
+		mid := (low + high) / 2
+		if data.dataDocument[mid].researchTitle == titleDocument {
+			fmt.Println("Document found")
+			fmt.Println("Name", data.dataDocument[mid].nameStudent)
+			fmt.Println("Topic", data.dataDocument[mid].researchTopic)
+			fmt.Println("Title", data.dataDocument[mid].researchTitle)
+			fmt.Println("Graduate Year", data.dataDocument[mid].graduationYear)
+			fmt.Println("Mentor", data.dataDocument[mid].mentor)
+			found = true
+			break
+		} else if data.dataDocument[mid].researchTitle < titleDocument {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+	if !found {
+		fmt.Println("Document not found")
+	}
+	fmt.Println()
+
 }
 
-func sortSelection()  {
-	
+func sortSelection(data *documentStudent) {
+	for i := 0; i < data.totalDocument-1; i++ {
+		minIndex := i
+		for j := i + 1; j < data.totalDocument; j++ {
+			if data.dataDocument[j].researchTitle < data.dataDocument[minIndex].researchTitle {
+				minIndex = j
+			}
+		}
+		if minIndex != i {
+			data.dataDocument[i], data.dataDocument[minIndex] = data.dataDocument[minIndex], data.dataDocument[i]
+		}
+	}
 }
 
-func sortInsertion()  {
-	
+func sortInsertion(data *documentStudent) {
+	for i := 1; i < data.totalDocument; i++ {
+		key := data.dataDocument[i]
+		j := i - 1
+		for j >= 0 && data.dataDocument[j].researchTitle > key.researchTitle {
+			data.dataDocument[j+1] = data.dataDocument[j]
+			j--
+		}
+		data.dataDocument[j+1] = key
+	}
+}
+
+func StatisticbyYear(data *documentStudent) {
+	yearCount := make(map[int]int)
+	for i := 0; i < data.totalDocument; i++ {
+		year := data.dataDocument[i].graduationYear
+		yearCount[year]++
+	}
+
+	fmt.Println("Graduation Year Statistics:")
+	for year, count := range yearCount {
+		fmt.Printf("Year: %d, Count: %d\n", year, count)
+	}
+
 }
 
 func main() {
