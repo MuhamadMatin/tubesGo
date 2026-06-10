@@ -5,42 +5,48 @@ import "fmt"
 const maxDocument = 1000
 
 type document struct {
-	id, graduationYear                                int
+	id, graduationYear int
 	nameStudent, mentor, researchTopic, researchTitle string
-	graduationStatus                                  bool
+	graduationStatus bool
 }
 
 type documentStudent struct {
 	totalDocument int
-	dataDocument  [maxDocument]document
+	dataDocument [maxDocument]document
 }
 
 type yearSummary struct {
-	year  int
+	year int
 	count int
 }
 
 func add(data *documentStudent) {
 	var (
-		yearGraduation                                    int
+		yearGraduation int
 		studentName, titleResearch, Mentor, topicResearch string
-		statusGraduate                                    bool
+		statusGraduate bool
 	)
 
 	if data.totalDocument >= maxDocument {
-		fmt.Print("Document full")
+		fmt.Print("!!! Document Full !!!")
 	} else {
-		fmt.Println("Fill name student")
-		fmt.Scan(&studentName)
-		fmt.Println("Fill graduation year")
-		fmt.Scan(&yearGraduation)
-		fmt.Println("Fill research topic")
-		fmt.Scan(&topicResearch)
-		fmt.Println("Fill research title")
-		fmt.Scan(&titleResearch)
-		fmt.Println("Fill mentor")
-		fmt.Scan(&Mentor)
-		fmt.Println("Fill graduate status")
+		fmt.Println()
+		fmt.Println("==============")
+		fmt.Println(" ADD DOCUMENT")
+		fmt.Println("==============")
+		fmt.Println()
+
+		fmt.Print("Name            : ")
+		fmt.Scan(&studentName) 
+		fmt.Print("Topic           : ") 
+		fmt.Scan(&topicResearch) 
+		fmt.Print("Title           : ") 
+		fmt.Scan(&titleResearch) 
+		fmt.Print("Mentor          : ") 
+		fmt.Scan(&Mentor) 
+		fmt.Print("Graduation Year : ") 
+		fmt.Scan(&yearGraduation) 
+		fmt.Print("Graduate Status (true/false) : ") 
 		fmt.Scan(&statusGraduate)
 
 		data.dataDocument[data.totalDocument] = document{
@@ -54,20 +60,25 @@ func add(data *documentStudent) {
 		}
 
 		data.totalDocument++
-		fmt.Println("success add document")
+		fmt.Println("^^^ Success Add Document ^^^")
 	}
 	fmt.Println()
 }
 
 func edit(data *documentStudent) {
 	var (
-		foundIndex                                                       int = -1
-		yearGraduation                                                   int
+		foundIndex int = -1
+		yearGraduation int
 		titleDocument, studentName, titleResearch, Mentor, topicResearch string
-		statusGraduate                                                   bool
+		statusGraduate bool
 	)
 
-	fmt.Println("Fill title document: ")
+	fmt.Println()
+	fmt.Println("===============")
+	fmt.Println(" EDIT DOCUMENT")
+	fmt.Println("===============")
+	fmt.Println()
+	fmt.Print("Fill Title Document To Edit: ")
 	fmt.Scan(&titleDocument)
 
 	for i := 0; i < data.totalDocument; i++ {
@@ -78,19 +89,19 @@ func edit(data *documentStudent) {
 	}
 
 	if foundIndex == -1 {
-		fmt.Println("Document not found")
+		fmt.Print("!!! Document Not Found !!!")
 	} else {
-		fmt.Println("Fill name student")
-		fmt.Scan(&studentName)
-		fmt.Println("Fill graduation year")
-		fmt.Scan(&yearGraduation)
-		fmt.Println("Fill research topic")
-		fmt.Scan(&topicResearch)
-		fmt.Println("Fill research title")
-		fmt.Scan(&titleResearch)
-		fmt.Println("Fill mentor")
-		fmt.Scan(&Mentor)
-		fmt.Println("Fill graduate status")
+		fmt.Print("Name            : ")
+		fmt.Scan(&studentName) 
+		fmt.Print("Topic           : ") 
+		fmt.Scan(&topicResearch) 
+		fmt.Print("Title           : ") 
+		fmt.Scan(&titleResearch) 
+		fmt.Print("Mentor          : ") 
+		fmt.Scan(&Mentor) 
+		fmt.Print("Graduation Year : ") 
+		fmt.Scan(&yearGraduation) 
+		fmt.Print("Graduate Status (true/false) : ") 
 		fmt.Scan(&statusGraduate)
 
 		data.dataDocument[foundIndex] = document{
@@ -103,7 +114,7 @@ func edit(data *documentStudent) {
 			graduationStatus: statusGraduate,
 		}
 
-		fmt.Println("Success edit document")
+		fmt.Println("^^^ Success Edit Document ^^^")
 	}
 	fmt.Println()
 }
@@ -114,7 +125,12 @@ func delete(data *documentStudent) {
 		titleDocument string
 	)
 
-	fmt.Print("Fill title document to delete: ")
+	fmt.Println()
+	fmt.Println("=================")
+	fmt.Println(" DELETE DOCUMENT")
+	fmt.Println("=================")
+	fmt.Println()
+	fmt.Print("Fill Title Document To Delete: ")
 	fmt.Scan(&titleDocument)
 
 	for i := 0; i < data.totalDocument; i++ {
@@ -125,40 +141,51 @@ func delete(data *documentStudent) {
 	}
 
 	if foundIndex == -1 {
-		fmt.Println("Document not found")
+		fmt.Println("!!! Document Not Found !!!")
 	} else {
 		for j := foundIndex; j < data.totalDocument-1; j++ {
 			data.dataDocument[j] = data.dataDocument[j+1]
 		}
 
 		data.totalDocument--
-		fmt.Println("Success delete document")
+		fmt.Println("^^^ Success Delete Document ^^^")
 	}
+	
 	fmt.Println()
 }
 
 func showData(data documentStudent) {
 	if data.totalDocument > 0 {
+		fmt.Println()
+		fmt.Println("==============")
+		fmt.Println(" ALL DOCUMENT")
+		fmt.Println("==============")
+		fmt.Println()
 		for i := 0; i < data.totalDocument; i++ {
 			var documentStudent = data.dataDocument[i]
+			
 			fmt.Println("ID", documentStudent.id)
-
-			fmt.Println("Name 	  :", documentStudent.nameStudent)
-			fmt.Println("Topic 	  :", documentStudent.researchTopic)
-			fmt.Println("Title 	  :", documentStudent.researchTitle)
-			fmt.Println("Graduate Year:", documentStudent.graduationYear)
-			fmt.Println("Mentor    :", documentStudent.mentor)
-			fmt.Println("Status    :", documentStudent.graduationStatus)
+			fmt.Println("Name             :", documentStudent.nameStudent) 
+			fmt.Println("Topic            :", documentStudent.researchTopic) 
+			fmt.Println("Title            :", documentStudent.researchTitle) 
+			fmt.Println("Mentor           :", documentStudent.mentor) 
+			fmt.Println("Graduate Year    :", documentStudent.graduationYear) 
+			fmt.Print("Graduation Status: ") 
+			if documentStudent.graduationStatus == false { 
+				fmt.Println("Not Graduated") 
+			} else { 
+				fmt.Println("Graduate") 
+			}
+			fmt.Println()
 		}
 	} else {
-		fmt.Println("Document empty")
+		fmt.Println("!!! Document Empty !!!")
 	}
-	fmt.Println()
 }
 
 func summaryData(data documentStudent) {
 	var (
-		summary                       [maxDocument]yearSummary
+		summary [maxDocument]yearSummary
 		totalSummary, foundYear, year int
 	)
 
@@ -181,7 +208,11 @@ func summaryData(data documentStudent) {
 		}
 	}
 
-	fmt.Println("Graduation Year Statistics:")
+	fmt.Println()
+	fmt.Println("===================")
+	fmt.Println(" SUMMARIES BY YEAR")
+	fmt.Println("===================")
+	fmt.Println()
 	for i := 0; i < totalSummary; i++ {
 		fmt.Println("Tahun", summary[i].year, " Count", summary[i].count)
 	}
@@ -190,31 +221,39 @@ func summaryData(data documentStudent) {
 
 func searchSequential(data *documentStudent) {
 	var titleDocument string
-	fmt.Print("Fill title document to search: ")
+	fmt.Print("Fill Title Document To Search: ")
 	fmt.Scan(&titleDocument)
 
 	found := false
 	for i := 0; i < data.totalDocument; i++ {
 		if titleDocument == data.dataDocument[i].researchTitle {
-			fmt.Println("Document found")
-			fmt.Println("Name", data.dataDocument[i].nameStudent)
-			fmt.Println("Topic", data.dataDocument[i].researchTopic)
-			fmt.Println("Title", data.dataDocument[i].researchTitle)
-			fmt.Println("Graduate Year", data.dataDocument[i].graduationYear)
-			fmt.Println("Mentor", data.dataDocument[i].mentor)
+			fmt.Println("^^^ Document Found ^^^")
+
+			fmt.Println("ID", data.dataDocument[i].id)
+			fmt.Println("Name             :", data.dataDocument[i].nameStudent) 
+			fmt.Println("Topic            :", data.dataDocument[i].researchTopic) 
+			fmt.Println("Title            :", data.dataDocument[i].researchTitle) 
+			fmt.Println("Mentor           :", data.dataDocument[i].mentor) 
+			fmt.Println("Graduate Year    :", data.dataDocument[i].graduationYear) 
+			fmt.Print("Graduation Status: ") 
+			if data.dataDocument[i].graduationStatus == false { 
+				fmt.Println("Not Graduated") 
+			} else { 
+				fmt.Println("Graduate") 
+			}
 			found = true
 			break
 		}
 	}
 	if !found {
-		fmt.Println("Document not found")
+		fmt.Println("!!! Document Not Found !!!")
 	}
 	fmt.Println()
 }
 
 func searchBinary(data documentStudent) {
 	var title string
-	fmt.Print("Fill title document to search: ")
+	fmt.Print("Fill Title Document To Search: ")
 	fmt.Scan(&title)
 
 	for i := 1; i < data.totalDocument; i++ {
@@ -236,12 +275,20 @@ func searchBinary(data documentStudent) {
 		doc := data.dataDocument[mid]
 
 		if doc.researchTitle == title {
-			fmt.Println("Document found")
-			fmt.Println("Name", doc.nameStudent)
-			fmt.Println("Topic", doc.researchTopic)
-			fmt.Println("Title", doc.researchTitle)
-			fmt.Println("Graduate Year", doc.graduationYear)
-			fmt.Println("Mentor", doc.mentor)
+			fmt.Println("^^^ Document Found ^^^")
+
+			fmt.Println("ID", doc.id)
+			fmt.Println("Name             :", doc.nameStudent) 
+			fmt.Println("Topic            :", doc.researchTopic) 
+			fmt.Println("Title            :", doc.researchTitle) 
+			fmt.Println("Mentor           :", doc.mentor) 
+			fmt.Println("Graduate Year    :", doc.graduationYear) 
+			fmt.Print("Graduation Status: ") 
+			if doc.graduationStatus == false { 
+				fmt.Println("Not Graduated") 
+			} else { 
+				fmt.Println("Graduate") 
+			}
 			found = true
 			break
 		} else if doc.researchTitle < title {
@@ -252,7 +299,7 @@ func searchBinary(data documentStudent) {
 	}
 
 	if !found {
-		fmt.Println("Document not found")
+		fmt.Println("!!! Document Not Found !!!")
 	}
 	fmt.Println()
 }
@@ -286,29 +333,19 @@ func sortInsertionbyYear(data documentStudent) {
 	showData(data)
 }
 
-// func StatisticbyYear(data *documentStudent) {
-// 	yearCount := make(map[int]int)
-// 	for i := 0; i < data.totalDocument; i++ {
-// 		year := data.dataDocument[i].graduationYear
-// 		yearCount[year]++
-// 	}
-
-// 	fmt.Println("Graduation Year Statistics:")
-// 	for year, count := range yearCount {
-// 		fmt.Printf("Year: %d, Count: %d\n", year, count)
-// 	}
-
-// }
-
 func main() {
 	var (
-		arsip  documentStudent
+		arsip documentStudent
 		option int
 	)
 
+	// uncomment when you generate dummy data
 	generateDummyData(&arsip)
 
 	for {
+		fmt.Println("==========")
+		fmt.Println(" SkripsIn")
+		fmt.Println("==========")
 		fmt.Println("Choose option by number")
 		fmt.Println("1. Show Document")
 		fmt.Println("2. Add Document")
@@ -342,10 +379,10 @@ func main() {
 			} else if option == 9 {
 				sortInsertionbyYear(arsip)
 			} else if option == 10 {
-				fmt.Print("Out")
+				fmt.Print("See ya")
 				break
 			} else {
-				fmt.Println("Nonvalid option")
+				fmt.Println("!!! Invalid Option, Please Input Again !!!")
 			}
 		}
 	}
