@@ -5,26 +5,26 @@ import "fmt"
 const maxDocument = 1000
 
 type document struct {
-	id, graduationYear int
+	id, graduationYear                                int
 	nameStudent, mentor, researchTopic, researchTitle string
 	graduationStatus                                  bool
 }
 
 type documentStudent struct {
 	totalDocument int
-	dataDocument [maxDocument]document
+	dataDocument  [maxDocument]document
 }
 
 type yearSummary struct {
-	year int
+	year  int
 	count int
 }
 
 func add(data *documentStudent) {
 	var (
-		yearGraduation int
+		yearGraduation                                    int
 		studentName, titleResearch, Mentor, topicResearch string
-		statusGraduate bool
+		statusGraduate                                    bool
 	)
 
 	if data.totalDocument >= maxDocument {
@@ -44,12 +44,12 @@ func add(data *documentStudent) {
 		fmt.Scan(&statusGraduate)
 
 		data.dataDocument[data.totalDocument] = document{
-			id: data.totalDocument+1,
-			graduationYear: yearGraduation,
-			nameStudent: studentName, 
-			mentor: Mentor, 
-			researchTopic: topicResearch, 
-			researchTitle: titleResearch,
+			id:               data.totalDocument + 1,
+			graduationYear:   yearGraduation,
+			nameStudent:      studentName,
+			mentor:           Mentor,
+			researchTopic:    topicResearch,
+			researchTitle:    titleResearch,
 			graduationStatus: statusGraduate,
 		}
 
@@ -59,12 +59,12 @@ func add(data *documentStudent) {
 	fmt.Println()
 }
 
-func edit(data *documentStudent)  {
+func edit(data *documentStudent) {
 	var (
-		foundIndex int = -1
-		yearGraduation int
+		foundIndex                                                       int = -1
+		yearGraduation                                                   int
 		titleDocument, studentName, titleResearch, Mentor, topicResearch string
-		statusGraduate bool
+		statusGraduate                                                   bool
 	)
 
 	fmt.Println("Fill title document: ")
@@ -94,12 +94,12 @@ func edit(data *documentStudent)  {
 		fmt.Scan(&statusGraduate)
 
 		data.dataDocument[foundIndex] = document{
-			id: data.dataDocument[foundIndex].id,
-			graduationYear: yearGraduation,
-			nameStudent: studentName, 
-			mentor: Mentor, 
-			researchTopic: topicResearch, 
-			researchTitle: titleResearch,
+			id:               data.dataDocument[foundIndex].id,
+			graduationYear:   yearGraduation,
+			nameStudent:      studentName,
+			mentor:           Mentor,
+			researchTopic:    topicResearch,
+			researchTitle:    titleResearch,
 			graduationStatus: statusGraduate,
 		}
 
@@ -110,7 +110,7 @@ func edit(data *documentStudent)  {
 
 func delete(data *documentStudent) {
 	var (
-		foundIndex int = -1
+		foundIndex    int = -1
 		titleDocument string
 	)
 
@@ -127,12 +127,12 @@ func delete(data *documentStudent) {
 	if foundIndex == -1 {
 		fmt.Println("Document not found")
 	} else {
-		for j := foundIndex; j < data.totalDocument - 1; j++ {
-				data.dataDocument[j] = data.dataDocument[j+1]
-			}
+		for j := foundIndex; j < data.totalDocument-1; j++ {
+			data.dataDocument[j] = data.dataDocument[j+1]
+		}
 
-			data.totalDocument--
-			fmt.Println("Success delete document")
+		data.totalDocument--
+		fmt.Println("Success delete document")
 	}
 	fmt.Println()
 }
@@ -158,14 +158,14 @@ func showData(data documentStudent) {
 
 func summaryData(data documentStudent) {
 	var (
-		summary [maxDocument]yearSummary
+		summary                       [maxDocument]yearSummary
 		totalSummary, foundYear, year int
 	)
 
 	for i := 0; i < data.totalDocument; i++ {
 		year = data.dataDocument[i].graduationYear
 		foundYear = -1
-		
+
 		for j := 0; j < totalSummary; j++ {
 			if summary[j].year == year {
 				summary[j].count++
@@ -212,54 +212,11 @@ func searchSequential(data *documentStudent) {
 	fmt.Println()
 }
 
-func searchBinary(data *documentStudent) {
-	var titleDocument string
+func searchBinary(data documentStudent) {
+	var title string
 	fmt.Print("Fill title document to search: ")
-	fmt.Scan(&titleDocument)
+	fmt.Scan(&title)
 
-	low := 0
-	high := data.totalDocument - 1
-	found := false
-
-	for low <= high {
-		mid := (low + high) / 2
-		if data.dataDocument[mid].researchTitle == titleDocument {
-			fmt.Println("Document found")
-			fmt.Println("Name", data.dataDocument[mid].nameStudent)
-			fmt.Println("Topic", data.dataDocument[mid].researchTopic)
-			fmt.Println("Title", data.dataDocument[mid].researchTitle)
-			fmt.Println("Graduate Year", data.dataDocument[mid].graduationYear)
-			fmt.Println("Mentor", data.dataDocument[mid].mentor)
-			found = true
-			break
-		} else if data.dataDocument[mid].researchTitle < titleDocument {
-			low = mid + 1
-		} else {
-			high = mid - 1
-		}
-	}
-	if !found {
-		fmt.Println("Document not found")
-	}
-	fmt.Println()
-
-}
-
-func sortSelection(data *documentStudent) {
-	for i := 0; i < data.totalDocument-1; i++ {
-		minIndex := i
-		for j := i + 1; j < data.totalDocument; j++ {
-			if data.dataDocument[j].researchTitle < data.dataDocument[minIndex].researchTitle {
-				minIndex = j
-			}
-		}
-		if minIndex != i {
-			data.dataDocument[i], data.dataDocument[minIndex] = data.dataDocument[minIndex], data.dataDocument[i]
-		}
-	}
-}
-
-func sortInsertion(data *documentStudent) {
 	for i := 1; i < data.totalDocument; i++ {
 		key := data.dataDocument[i]
 		j := i - 1
@@ -269,25 +226,83 @@ func sortInsertion(data *documentStudent) {
 		}
 		data.dataDocument[j+1] = key
 	}
-}
 
-func StatisticbyYear(data *documentStudent) {
-	yearCount := make(map[int]int)
-	for i := 0; i < data.totalDocument; i++ {
-		year := data.dataDocument[i].graduationYear
-		yearCount[year]++
+	low := 0
+	high := data.totalDocument - 1
+	found := false
+
+	for low <= high {
+		mid := (low + high) / 2
+		doc := data.dataDocument[mid]
+
+		if doc.researchTitle == title {
+			fmt.Println("Document found")
+			fmt.Println("Name", doc.nameStudent)
+			fmt.Println("Topic", doc.researchTopic)
+			fmt.Println("Title", doc.researchTitle)
+			fmt.Println("Graduate Year", doc.graduationYear)
+			fmt.Println("Mentor", doc.mentor)
+			found = true
+			break
+		} else if doc.researchTitle < title {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
 	}
 
-	fmt.Println("Graduation Year Statistics:")
-	for year, count := range yearCount {
-		fmt.Printf("Year: %d, Count: %d\n", year, count)
+	if !found {
+		fmt.Println("Document not found")
 	}
-
+	fmt.Println()
 }
+
+func sortSelectionbygraduationYear(data documentStudent) {
+	for i := 0; i < data.totalDocument-1; i++ {
+		min := i
+		for j := i + 1; j < data.totalDocument; j++ {
+			if data.dataDocument[j].graduationYear < data.dataDocument[min].graduationYear {
+				min = j
+			}
+		}
+		if min != i {
+			data.dataDocument[i], data.dataDocument[min] = data.dataDocument[min], data.dataDocument[i]
+		}
+	}
+	showData(data)
+}
+
+func sortInsertionbyYear(data documentStudent) {
+	for i := 1; i < data.totalDocument; i++ {
+		key := data.dataDocument[i]
+		j := i - 1
+
+		for j >= 0 && data.dataDocument[j].graduationYear > key.graduationYear {
+			data.dataDocument[j+1] = data.dataDocument[j]
+			j--
+		}
+		data.dataDocument[j+1] = key
+	}
+	showData(data)
+}
+
+// func StatisticbyYear(data *documentStudent) {
+// 	yearCount := make(map[int]int)
+// 	for i := 0; i < data.totalDocument; i++ {
+// 		year := data.dataDocument[i].graduationYear
+// 		yearCount[year]++
+// 	}
+
+// 	fmt.Println("Graduation Year Statistics:")
+// 	for year, count := range yearCount {
+// 		fmt.Printf("Year: %d, Count: %d\n", year, count)
+// 	}
+
+// }
 
 func main() {
 	var (
-		arsip documentStudent
+		arsip  documentStudent
 		option int
 	)
 
@@ -300,9 +315,13 @@ func main() {
 		fmt.Println("3. Edit Document")
 		fmt.Println("4. Delete Document")
 		fmt.Println("5. Summary data")
-		fmt.Println("6. Exit")
+		fmt.Println("6. Search Document (Sequential)")
+		fmt.Println("7. Search Document (Binary)")
+		fmt.Println("8. Sort by Year (Selection)")
+		fmt.Println("9. Sort by Year (Insertion)")
+		fmt.Println("10. Exit")
 		fmt.Scan(&option)
-		
+
 		if arsip.totalDocument < maxDocument {
 			if option == 1 {
 				showData(arsip)
@@ -315,6 +334,14 @@ func main() {
 			} else if option == 5 {
 				summaryData(arsip)
 			} else if option == 6 {
+				searchSequential(&arsip)
+			} else if option == 7 {
+				searchBinary(arsip)
+			} else if option == 8 {
+				sortSelectionbygraduationYear(arsip)
+			} else if option == 9 {
+				sortInsertionbyYear(arsip)
+			} else if option == 10 {
 				fmt.Print("Out")
 				break
 			} else {
