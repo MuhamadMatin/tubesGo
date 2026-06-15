@@ -1,66 +1,178 @@
 <p align="center"><a href="https://go.dev" target="_blank"><img src="https://go.dev/blog/go-brand/Go-Logo/SVG/Go-Logo_Blue.svg" width="300" alt="Go Logo"></a></p>
 <h1 align="center">📁 Sistem Informasi Inventaris Dokumen Skripsi (SkripsIn)</h1>
 <p align="center">
-  Sistem Informasi Inventaris Dokumen Skripsi adalah aplikasi untuk mengelola arsip tugas
-akhir mahasiswa secara digital. Data utama yang digunakan adalah data judul skripsi, data
-penulis, dan data tahun lulus. Pengguna aplikasi adalah staf administrasi program studi atau
-petugas perpustakaan.
+  Kelola arsip tugas akhir mahasiswa dari terminal. SkripsIn melacak judul skripsi, penulis, dan tahun kelulusan. Dirancang untuk staf administrasi program studi dan petugas perpustakaan.
 </p>
 
 ---
 
-## ⚠️ Penting
+## Catatan Penting
  
-- Pastikan [Go](https://go.dev/dl) sudah terinstal di sistem Anda (versi **1.18** atau lebih baru)
-- Aplikasi berjalan di **terminal / command line** — tidak memerlukan browser atau database
-- Input yang mengandung **spasi** harus diganti dengan `_` (underscore), contoh: `ini_Budi`
-- **Binary Search** hanya bekerja pada data yang **sudah diurutkan** terlebih dahulu
+- Instal [Go 1.18+](https://go.dev/dl) sebelum menjalankan aplikasi.
+- Berjalan di terminal. Tanpa browser, tanpa database eksternal.
+- Ganti spasi dengan underscore (`_`) saat input data. Contoh: `ini_Budi`.
+- Urutkan data terlebih dahulu sebelum menjalankan Binary Search.
+
 ---
  
-## 🚀 Instalasi
+## Instalasi
  
-### 1. Clone repository
- 
+1. Clone repository
 ```bash
 git clone https://github.com/MuhamadMatin/tubesGo.git
 cd tubesGo
 ```
  
-### 2. Verifikasi instalasi Go
- 
+2. Pastikan Go terinstal
 ```bash
 go version
 ```
+*(Unduh di [https://go.dev/dl](https://go.dev/dl) jika belum terinstal).*
  
-> Belum punya Go? Unduh di [https://go.dev/dl](https://go.dev/dl)
- 
-### 3. Jalankan program
- 
+3. Jalankan aplikasi
 ```bash
 go run .
 ```
  
-### 4. Build menjadi executable (opsional)
- 
+4. Build menjadi executable (opsional)
 ```bash
 # Build
 go build -o skripsin main.go
  
-# Jalankan (Linux / macOS)
+# Linux / macOS
 ./skripsin
  
-# Jalankan (Windows)
+# Windows
 skripsin.exe
 ```
  
-Akses program melalui terminal setelah dijalankan.
- 
 ---
 
+## Alur Program
+
+```mermaid
+flowchart TD
+    %% --- Styling ---
+    classDef startEnd fill:#ff9999,stroke:#333,stroke-width:2px;
+    classDef menu fill:#99ccff,stroke:#333,stroke-width:2px;
+    classDef process fill:#ffffff,stroke:#333,stroke-width:1px;
+
+    %% --- Main Flow ---
+    S([Start]):::startEnd --> INIT[generateDummyData]:::process
+    INIT --> MENU[/Show Menu/]:::menu
+    MENU --> IN[/Input option/]:::process
+    IN --> OPT{Pilih Option?}
+
+    %% --- Option Routing ---
+    OPT -->|1| SH_CHK
+    OPT -->|2| AD_CHK
+    OPT -->|3| ED_IN
+    OPT -->|4| DE_IN
+    OPT -->|5| SM_LOOP
+    OPT -->|6| SQ_IN
+    OPT -->|7| BI_IN
+    OPT -->|8| SS_LOOP
+    OPT -->|9| SI_LOOP
+    OPT -->|10| EXIT([Exit]):::startEnd
+    OPT -->|else| ERR[/Invalid Option/]
+    ERR --> MENU
+
+    %% --- Subgraphs ---
+
+    subgraph g_show [1. Show Data]
+        SH_CHK{total > 0?}
+        SH_CHK -->|yes| SH_PRINT[print each doc]
+        SH_CHK -->|no| SH_EMPTY[Document Empty]
+    end
+
+    subgraph g_add [2. Add Data]
+        AD_CHK{total >= max?}
+        AD_CHK -->|yes| AD_FULL[Document Full]
+        AD_CHK -->|no| AD_IN[/input fields/] --> AD_SAVE[store & total++]
+    end
+
+    subgraph g_edit [3. Edit Data]
+        ED_IN[/input title/] --> ED_FIND{found?}
+        ED_FIND -->|no| ED_404[Not Found]
+        ED_FIND -->|yes| ED_FIELDS[/input new fields/] --> ED_UPD[update doc]
+    end
+
+    subgraph g_del [4. Delete Data]
+        DE_IN[/input title/] --> DE_FIND{found?}
+        DE_FIND -->|no| DE_404[Not Found]
+        DE_FIND -->|yes| DE_SHIFT[shift docs left] --> DE_DEC[total--]
+    end
+
+    subgraph g_sum [5. Summary Data]
+        SM_LOOP[loop docs] --> SM_CHK{year in summary?}
+        SM_CHK -->|yes| SM_INC[count++]
+        SM_CHK -->|no| SM_NEW[add year entry]
+        SM_INC --> SM_NXT{more docs?}
+        SM_NEW --> SM_NXT
+        SM_NXT -->|yes| SM_LOOP
+        SM_NXT -->|no| SM_PRINT[print by year]
+    end
+
+    subgraph g_seq [6. Search Sequential]
+        SQ_IN[/input title/] --> SQ_LOOP[i = 0..total]
+        SQ_LOOP --> SQ_CHK{title match?}
+        SQ_CHK -->|yes| SQ_OK[showData result]
+        SQ_CHK -->|no| SQ_NXT{i < total?}
+        SQ_NXT -->|yes| SQ_LOOP
+        SQ_NXT -->|no| SQ_404[Not Found]
+    end
+
+    subgraph g_bin [7. Search Binary]
+        BI_IN[/input title/] --> BI_SORT[insertion sort by title]
+        BI_SORT --> BI_INIT[low=0 high=n-1]
+        BI_INIT --> BI_LOOP{low <= high?}
+        BI_LOOP -->|no| BI_404[Not Found]
+        BI_LOOP -->|yes| BI_MID[mid = low+high / 2]
+        BI_MID --> BI_CMP{doc.title vs title}
+        BI_CMP -->|match| BI_OK[showData result]
+        BI_CMP -->|less| BI_LO[low = mid+1] --> BI_LOOP
+        BI_CMP -->|greater| BI_HI[high = mid-1] --> BI_LOOP
+    end
+
+    subgraph g_sel [8. Sort Selection]
+        SS_LOOP[i = 0..n-2] --> SS_MIN[find min from i+1..n]
+        SS_MIN --> SS_CMP{min != i?}
+        SS_CMP -->|yes| SS_SWAP[swap i, min] --> SS_NEXT{i++, done?}
+        SS_CMP -->|no| SS_NEXT
+        SS_NEXT -->|no| SS_LOOP
+        SS_NEXT -->|yes| SS_SHOW[showData]
+    end
+
+    subgraph g_ins [9. Sort Insertion]
+        SI_LOOP[i = 1..n-1] --> SI_KEY[key = doc i]
+        SI_KEY --> SI_SHIFT[shift docs where year > key.year]
+        SI_SHIFT --> SI_INS[doc j+1 = key]
+        SI_INS --> SI_NEXT{i++, done?}
+        SI_NEXT -->|no| SI_LOOP
+        SI_NEXT -->|yes| SI_SHOW[showData]
+    end
+
+    %% --- Clean Return Paths ---
+    BACK_TO_MENU((Kembali ke Menu)):::menu
+
+    SH_PRINT & SH_EMPTY --> BACK_TO_MENU
+    AD_FULL & AD_SAVE --> BACK_TO_MENU
+    ED_404 & ED_UPD --> BACK_TO_MENU
+    DE_404 & DE_DEC --> BACK_TO_MENU
+    SM_PRINT --> BACK_TO_MENU
+    SQ_OK & SQ_404 --> BACK_TO_MENU
+    BI_OK & BI_404 --> BACK_TO_MENU
+    SS_SHOW --> BACK_TO_MENU
+    SI_SHOW --> BACK_TO_MENU
+
+    BACK_TO_MENU --> MENU
+```
+
+---
  
-## 📋 Data Dummy
+## Data Dummy
  
-Aplikasi sudah dilengkapi **10 data dummy** yang otomatis dimuat saat pertama kali dijalankan:
+SkripsIn memuat 10 data awal saat start:
  
 | ID | Nama Mahasiswa | Topik           | Judul Penelitian        | Pembimbing   | Tahun | Status   |
 |----|----------------|-----------------|-------------------------|--------------|-------|----------|
@@ -77,11 +189,11 @@ Aplikasi sudah dilengkapi **10 data dummy** yang otomatis dimuat saat pertama ka
  
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer    | Teknologi                                        |
 | -------- | ------------------------------------------------ |
 | Bahasa   | [Go (Golang)](https://go.dev)                    |
 | I/O      | [fmt](https://pkg.go.dev/fmt)                    |
-| Tipe Data | Array statis + Struct                           |
-| Antarmuka | CLI (Command Line Interface)                   |
+| Struktur | Array statis, Struct                             |
+| Output   | Command Line Interface (CLI)                     |
