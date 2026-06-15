@@ -11,7 +11,6 @@
 - Instal [Go 1.18+](https://go.dev/dl) sebelum menjalankan aplikasi.
 - Berjalan di terminal. Tanpa browser, tanpa database eksternal.
 - Ganti spasi dengan underscore (`_`) saat input data. Contoh: `ini_Budi`.
-- Urutkan data terlebih dahulu sebelum menjalankan Binary Search.
 
 ---
  
