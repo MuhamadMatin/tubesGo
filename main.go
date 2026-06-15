@@ -130,6 +130,7 @@ func delete(data *documentStudent) {
 	fmt.Println(" DELETE DOCUMENT")
 	fmt.Println("=================")
 	fmt.Println()
+	
 	fmt.Print("Fill Title Document To Delete: ")
 	fmt.Scan(&titleDocument)
 
@@ -157,10 +158,11 @@ func delete(data *documentStudent) {
 func showData(data documentStudent) {
 	if data.totalDocument > 0 {
 		fmt.Println()
-		fmt.Println("==============")
-		fmt.Println(" ALL DOCUMENT")
-		fmt.Println("==============")
+		fmt.Println("===============")
+		fmt.Println(" SHOW DOCUMENT")
+		fmt.Println("===============")
 		fmt.Println()
+
 		for i := 0; i < data.totalDocument; i++ {
 			var documentStudent = data.dataDocument[i]
 			
@@ -213,14 +215,20 @@ func summaryData(data documentStudent) {
 	fmt.Println(" SUMMARIES BY YEAR")
 	fmt.Println("===================")
 	fmt.Println()
+
 	for i := 0; i < totalSummary; i++ {
-		fmt.Println("Tahun", summary[i].year, " Count", summary[i].count)
+		fmt.Print("Year ", summary[i].year, ", Total: ", summary[i].count)
+		fmt.Println()
 	}
 	fmt.Println()
 }
 
 func searchSequential(data *documentStudent) {
-	var titleDocument string
+	var (
+		titleDocument string
+		result documentStudent
+	)
+
 	fmt.Print("Fill Title Document To Search: ")
 	fmt.Scan(&titleDocument)
 
@@ -229,22 +237,15 @@ func searchSequential(data *documentStudent) {
 		if titleDocument == data.dataDocument[i].researchTitle {
 			fmt.Println("^^^ Document Found ^^^")
 
-			fmt.Println("ID", data.dataDocument[i].id)
-			fmt.Println("Name             :", data.dataDocument[i].nameStudent) 
-			fmt.Println("Topic            :", data.dataDocument[i].researchTopic) 
-			fmt.Println("Title            :", data.dataDocument[i].researchTitle) 
-			fmt.Println("Mentor           :", data.dataDocument[i].mentor) 
-			fmt.Println("Graduate Year    :", data.dataDocument[i].graduationYear) 
-			fmt.Print("Graduation Status: ") 
-			if data.dataDocument[i].graduationStatus == false { 
-				fmt.Println("Not Graduated") 
-			} else { 
-				fmt.Println("Graduate") 
-			}
+			result.dataDocument[0] = data.dataDocument[i]
+			result.totalDocument = 1
+			showData(result)
+
 			found = true
 			break
 		}
 	}
+
 	if !found {
 		fmt.Println("!!! Document Not Found !!!")
 	}
@@ -252,7 +253,11 @@ func searchSequential(data *documentStudent) {
 }
 
 func searchBinary(data documentStudent) {
-	var title string
+	var (
+		title string
+		result documentStudent
+	)
+
 	fmt.Print("Fill Title Document To Search: ")
 	fmt.Scan(&title)
 
@@ -277,18 +282,10 @@ func searchBinary(data documentStudent) {
 		if doc.researchTitle == title {
 			fmt.Println("^^^ Document Found ^^^")
 
-			fmt.Println("ID", doc.id)
-			fmt.Println("Name             :", doc.nameStudent) 
-			fmt.Println("Topic            :", doc.researchTopic) 
-			fmt.Println("Title            :", doc.researchTitle) 
-			fmt.Println("Mentor           :", doc.mentor) 
-			fmt.Println("Graduate Year    :", doc.graduationYear) 
-			fmt.Print("Graduation Status: ") 
-			if doc.graduationStatus == false { 
-				fmt.Println("Not Graduated") 
-			} else { 
-				fmt.Println("Graduate") 
-			}
+			result.dataDocument[0] = doc
+			result.totalDocument = 1
+			showData(result)
+
 			found = true
 			break
 		} else if doc.researchTitle < title {
@@ -307,11 +304,13 @@ func searchBinary(data documentStudent) {
 func sortSelectionbygraduationYear(data documentStudent) {
 	for i := 0; i < data.totalDocument-1; i++ {
 		min := i
+
 		for j := i + 1; j < data.totalDocument; j++ {
 			if data.dataDocument[j].graduationYear < data.dataDocument[min].graduationYear {
 				min = j
 			}
 		}
+
 		if min != i {
 			data.dataDocument[i], data.dataDocument[min] = data.dataDocument[min], data.dataDocument[i]
 		}
@@ -328,6 +327,7 @@ func sortInsertionbyYear(data documentStudent) {
 			data.dataDocument[j+1] = data.dataDocument[j]
 			j--
 		}
+
 		data.dataDocument[j+1] = key
 	}
 	showData(data)
