@@ -194,5 +194,5 @@ SkripsIn memuat 10 data awal saat start:
 | -------- | ------------------------------------------------ |
 | Bahasa   | [Go (Golang)](https://go.dev)                    |
 | I/O      | [fmt](https://pkg.go.dev/fmt)                    |
-| Struktur | Array statis, Struct                             |
+| Struktur | Array, Struct                             |
 | Output   | Command Line Interface (CLI)                     |
